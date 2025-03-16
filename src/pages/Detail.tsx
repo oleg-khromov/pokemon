@@ -1,9 +1,9 @@
-import React from "react";
+import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainContainer, ErrorBoundary } from "components";
 import PokemonDetail from "features/pokemon-detail";
 
-const Detail: React.FC = () => {
+const Detail: FC = () => {
   const navigate = useNavigate();
 
   return (

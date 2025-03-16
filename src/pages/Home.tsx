@@ -1,8 +1,8 @@
-import React from "react";
+import { FC } from "react";
 import { MainContainer, Title, ErrorBoundary } from "components";
 import Pokemons from "features/pokemons";
 
-const Home: React.FC = () => {
+const Home: FC = () => {
   return (
     <MainContainer>
       <Title>Pokemons</Title>

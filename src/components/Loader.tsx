@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { MainContainer, Title } from "components";
 
-const NotFound: FC = () => {
+const Loader: FC = () => {
   return (
     <MainContainer>
-      <Title>Not Found</Title>
+      <Title>Loading...</Title>
     </MainContainer>
   );
 };
 
-export default NotFound;
+export default Loader;

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useDebounce } from "hooks/useDebounce";
 
-interface Props {
+interface PokemonFiltersProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filterType: string;
@@ -10,7 +10,7 @@ interface Props {
   isTypesLoading: boolean;
 }
 
-const PokemonFilters: React.FC<Props> = ({
+const PokemonFilters: FC<PokemonFiltersProps> = ({
   searchTerm,
   setSearchTerm,
   filterType,
@@ -21,7 +21,7 @@ const PokemonFilters: React.FC<Props> = ({
   const [search, setSearch] = useState(searchTerm);
   const debouncedSearch = useDebounce(search, 500);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSearchTerm(debouncedSearch);
   }, [debouncedSearch, setSearchTerm]);
 
@@ -38,6 +38,7 @@ const PokemonFilters: React.FC<Props> = ({
         value={filterType}
         onChange={(e) => setFilterType(e.target.value)}
         className="border p-2 rounded"
+        disabled={isTypesLoading}
       >
         <option value="">All Types</option>
         {isTypesLoading ? (

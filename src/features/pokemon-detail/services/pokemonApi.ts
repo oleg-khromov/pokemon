@@ -1,11 +1,9 @@
-import axios from "axios";
-
-const API_URL = "https://pokeapi.co/api/v2";
+import api from "services/api";
 
 export const getPokemonById = async (pokemondId: string) => {
   const {
     data: { id, name, types, sprites, abilities, stats },
-  } = await axios.get(`${API_URL}/pokemon/${pokemondId}`);
+  } = await api.get(`pokemon/${pokemondId}`);
   return {
     id,
     name,

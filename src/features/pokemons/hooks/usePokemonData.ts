@@ -1,31 +1,61 @@
-import { usePokemons } from "./usePokemons";
-import { usePokemonTypes } from "./usePokemonTypes";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "store";
-import { setSearchTerm, setFilterType } from "../reducers/pokemonSlice";
+import { usePokemons, usePokemonDetails, usePokemonTypes } from ".";
+import {
+  setSearchTerm,
+  setFilterType,
+  setPagination,
+} from "../reducers/pokemonSlice";
 
-export const usePokemonData = (limit: number, offset: number) => {
+export const usePokemonData = () => {
   const dispatch = useDispatch();
-  const { searchTerm, filterType } = useSelector(
-    (state: RootState) => state.pokemon
+  const { limit, offset, searchTerm, filterType } = useSelector(
+    (state: RootState) => {
+      return state.pokemon;
+    }
   );
-  const { data: pokemonList, isLoading, error } = usePokemons(limit, offset);
   const { data: types, isLoading: isTypesLoading } = usePokemonTypes();
 
-  const filteredPokemon = pokemonList?.filter(
-    (pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterType ? pokemon.types.includes(filterType) : true)
+  const { data: pokemons, isLoading, error } = usePokemons(filterType);
+
+  const filteredPokemon = pokemons?.count
+    ? pokemons?.data.filter((pokemon: any) =>
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
+  const offsetCurrent = filteredPokemon.length > limit ? offset : 0;
+
+  const paginatedPokemons = filteredPokemon.slice(
+    offsetCurrent,
+    offsetCurrent + limit
   );
+
+  const {
+    pokemonDetails,
+    isLoading: isLoadingPokemonDetails,
+    isError: isErrorPokemonDetails,
+  } = usePokemonDetails(paginatedPokemons);
+
+  const mapedPokemonDetails =
+    !isLoadingPokemonDetails && !isErrorPokemonDetails
+      ? pokemonDetails.map((p: any) => p.data)
+      : [];
+
+  const pokemonsCount = searchTerm ? filteredPokemon.length : pokemons?.count;
 
   return {
     searchTerm,
     filterType,
+    limit,
+    offset,
     setSearchTerm: (term: string) => dispatch(setSearchTerm(term)),
     setFilterType: (type: string) => dispatch(setFilterType(type)),
-    pokemonList,
-    filteredPokemon,
+    setPagination: (newOffset: number) => dispatch(setPagination(newOffset)),
+    pokemons: mapedPokemonDetails,
+    pokemonsCount,
     isLoading,
+    isLoadingPokemonDetails,
     isTypesLoading,
     error,
     types,

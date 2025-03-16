@@ -1,7 +1,8 @@
-import "react-loading-skeleton/dist/skeleton.css";
+import { FC } from "react";
 import SkeletonRow from "./SkeletonRow";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const SkeletonTable = () => (
+const SkeletonTable: FC = () => (
   <table className="min-w-full border-collapse border">
     <thead>
       <tr className="border">

@@ -1,11 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPokemonList } from "../services";
+import { getPokemons, getPokemonsByType } from "../services/pokemonApi";
 
-export const usePokemons = (limit = 20, offset = 0) => {
+export const usePokemons = (filterType: string) => {
   return useQuery({
-    queryKey: ["pokemonList", limit, offset],
-    queryFn: () => getPokemonList(limit, offset),
-    staleTime: 1000 * 60 * 60 * 1,
-    gcTime: 1000 * 60 * 60 * 1,
+    queryKey: filterType ? ["pokemons", filterType] : ["pokemons", "all"],
+    queryFn: () => (filterType ? getPokemonsByType(filterType) : getPokemons()),
   });
 };
+
+// export const usePokemons = (
+//   limit: number,
+//   offset: number,
+//   filterType: string
+// ) => {
+//   return useQuery({
+//     queryKey: filterType
+//       ? ["pokemons", filterType]
+//       : ["pokemonList", limit, offset],
+//     queryFn: () =>
+//       filterType ? getPokemonsByType(filterType) : getPokemons(limit, offset),
+//   });
+// };

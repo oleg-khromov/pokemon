@@ -1,26 +1,32 @@
-import React, { useState } from "react";
+import { FC } from "react";
 import { usePokemonData } from "./hooks";
-import { PokemonTable, PokemonFilters, SkeletonTable } from "./components";
+import {
+  PokemonTable,
+  PokemonFilters,
+  PokemonPagination,
+  SkeletonPage,
+} from "./components";
 
-const Pokemons: React.FC = () => {
-  const [page, setPage] = useState(0);
-  const limit = 20;
-  const offset = page * limit;
-
+const Pokemons: FC = () => {
   const {
     searchTerm,
     filterType,
+    limit,
+    offset,
     setSearchTerm,
     setFilterType,
-    filteredPokemon,
+    setPagination,
+    pokemons,
+    pokemonsCount,
     isLoading,
+    isLoadingPokemonDetails,
     isTypesLoading,
     error,
     types,
-  } = usePokemonData(limit, offset);
+  } = usePokemonData();
 
-  if (error) return <div>Error loading Pokemon.</div>;
-  if (isLoading) return <SkeletonTable />;
+  if (error) return <div>Error loading Pokemon. {error?.message}</div>;
+  if (isLoading || isLoadingPokemonDetails) return <SkeletonPage />;
 
   return (
     <div className="p-4">
@@ -32,23 +38,13 @@ const Pokemons: React.FC = () => {
         types={types || []}
         isTypesLoading={isTypesLoading}
       />
-      <PokemonTable pokemonList={filteredPokemon || []} />
-
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-          disabled={page === 0}
-          className="p-2 border rounded bg-gray-200 disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          className="p-2 border rounded bg-gray-200"
-        >
-          Next
-        </button>
-      </div>
+      <PokemonTable pokemons={pokemons || []} />
+      <PokemonPagination
+        setPagination={setPagination}
+        offset={offset}
+        limit={limit}
+        count={pokemonsCount}
+      />
     </div>
   );
 };

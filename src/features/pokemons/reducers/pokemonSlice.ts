@@ -1,27 +1,43 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PokemonState {
+  limit: number;
+  offset: number;
   searchTerm: string;
   filterType: string;
 }
 
 const initialState: PokemonState = {
+  limit: 10,
+  offset: 0,
   searchTerm: "",
   filterType: "",
 };
 
 const pokemonSlice = createSlice({
-  name: "pokemons-table",
+  name: "pokemons",
   initialState,
   reducers: {
     setSearchTerm: (state, action: PayloadAction<string>) => {
-      state.searchTerm = action.payload;
+      if (state.searchTerm !== action.payload) {
+        state.searchTerm = action.payload;
+        state.offset = 0;
+      }
     },
     setFilterType: (state, action: PayloadAction<string>) => {
-      state.filterType = action.payload;
+      if (state.filterType !== action.payload) {
+        state.filterType = action.payload;
+        state.offset = 0;
+      }
+    },
+    setPagination: (state, action: PayloadAction<number>) => {
+      if (state.offset !== action.payload) {
+        state.offset = action.payload;
+      }
     },
   },
 });
 
-export const { setSearchTerm, setFilterType } = pokemonSlice.actions;
+export const { setSearchTerm, setFilterType, setPagination } =
+  pokemonSlice.actions;
 export default pokemonSlice.reducer;

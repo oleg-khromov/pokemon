@@ -1,7 +1,8 @@
+import { FC } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const SkeletonRow = () => (
+const SkeletonRow: FC = () => (
   <tr>
     <td className="text-center">
       <Skeleton width={30} />
